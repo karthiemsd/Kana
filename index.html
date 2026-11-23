@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kana Kaanum Kalangal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf6ef;--ink:#2b2622;--mute:#8b8178;--line:#e6ddd0;--acc:#8a5a50;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1816;--ink:#efe6d9;--mute:#a09386;--line:#38302b;--acc:#d6a398}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;line-height:1.55}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+body:before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.brand{text-align:center;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--mute);padding:16px 0 6px}
+nav{display:flex;justify-content:center;gap:26px;padding:4px 12px 12px}
+nav button{border:0;background:none;padding:2px 0;margin:0;font:inherit;font-size:18px;color:var(--mute);cursor:pointer;border-bottom:1px solid transparent}
+nav button.on{color:var(--ink);border-color:var(--acc)}
+main{max-width:600px;margin:0 auto;padding:40px 24px 90px;animation:in .5s ease}
+@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-weight:400;font-size:38px;line-height:1.15;margin:0 0 6px}
+.lead{font-style:italic;color:var(--mute);margin:0 0 34px}
+.label{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+.count{font-size:92px;font-weight:400;line-height:1;margin:4px 0;color:var(--acc)}
+.sec{padding:26px 0;border-top:1px solid var(--line)}
+.item{padding:18px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.m{color:var(--mute);font-size:17px}
+input,textarea,select{width:100%;font:inherit;font-size:19px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:8px 0;margin:6px 0;outline:0}
+input:focus,textarea:focus,select:focus{border-color:var(--acc)}
+textarea{resize:vertical}
+button.b{font:inherit;font-size:17px;color:var(--acc);background:none;border:0;padding:6px 14px 6px 0;cursor:pointer}
+button.b:hover{text-decoration:underline}
+button.p{font:inherit;font-size:16px;letter-spacing:.06em;color:var(--bg);background:var(--ink);border:0;border-radius:2px;padding:10px 22px;margin-top:10px;cursor:pointer}
+.sub{display:flex;gap:22px;margin:-14px 0 30px}
+.sub button{border:0;background:none;font:inherit;font-size:17px;font-style:italic;color:var(--mute);padding:0;cursor:pointer}
+.sub button.on{color:var(--acc);text-decoration:underline;text-underline-offset:5px}
+.row{display:flex;gap:12px;align-items:center}
+.row input[type=checkbox]{width:auto;accent-color:var(--acc)}
+.num{color:var(--mute);min-width:42px;font-size:16px}
+.done{text-decoration:line-through;color:var(--mute)}
+a{color:var(--acc)}
+</style></head><body>
+<header><div class="brand">Kana Kaanum Kalangal</div><nav id="nav"></nav></header>
+<main id="app"></main>
+<script>
+var START=new Date(2025,11,12),KEY='kkk-v1';
+var SEED={
+reasons:["We are in love, and I feel it every day.","We have gone on dates, and I remember them fondly.","He gives me his first bite of food.","He reassures me when I need it.","He is emotionally available.","I yearn for him.","I love his sleepy voice.","I love his beard."],
+story:[{t:"Our Twitter post",d:"",n:"Add the date and details."},{t:"The unexpected DM",d:"",n:"Add the date and details."},{t:"Our conversations",d:"",n:"Add the details."},{t:"Our dates",d:"",n:"Add the dates and places."},{t:"Our relationship begins",d:"2025-12-12",n:"12 December 2025"}],
+songs:[["Naan Nee","Madras"],["Lover","Taylor Swift"],["slut!","Taylor Swift"],["Unara Unarvey",""],["Neeyum Naanum",""],["Kannana Kanne","Naanum Rowdy Dhaan"]],
+dates:[{l:"Our beginning",d:"2025-12-12",y:true}]};
+var S={reasons:[],story:SEED.story,letters:[],bucket:[],dates:SEED.dates,favs:{},notes:{}};
+try{var raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+for(var i=0;i<365;i++)if(typeof S.reasons[i]!=='string')S.reasons[i]=(!S.seeded&&SEED.reasons[i])||'';
+S.seeded=true;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function val(id){return document.getElementById(id).value.trim()}
+var tab='home',sub={world:'reasons',more:'letters'},edit=null,q='',rn=null;
+var TABS=[['home','Home'],['story','Our Story'],['world','Our World'],['more','More']];
+function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function until(d,y){var p=d.split('-').map(Number),t=today(),x=new Date(p[0],p[1]-1,p[2]);
+ if(y){x=new Date(t.getFullYear(),p[1]-1,p[2]);if(x<t)x=new Date(t.getFullYear()+1,p[1]-1,p[2])}
+ return Math.round((x-t)/864e5)}
+function go(t){tab=t;edit=null;q='';render();window.scrollTo(0,0)}
+function setSub(k,v){sub[k]=v;edit=null;q='';render()}
+function subnav(k,items){return '<div class="sub">'+items.map(function(i){return '<button class="'+(sub[k]==i[0]?'on':'')+'" onclick="setSub(\''+k+'\',\''+i[0]+'\')">'+i[1]+'</button>'}).join('')+'</div>'}
+function pickNote(){var L=S.letters.filter(function(l){return l.c==='Love note'});return L.length?L[Math.floor(Math.random()*L.length)]:null}
+function delIt(k,i){if(confirm('Delete this?')){S[k].splice(i,1);save();render()}}
+
+function home(){
+ var t=today(),n=Math.round((t-START)/864e5),i=Math.floor((t-new Date(t.getFullYear(),0,0))/864e5)-1,r=S.reasons[i];
+ var a=new Date(START),mo=0;while(new Date(a.getFullYear(),a.getMonth()+1,a.getDate())<=t){a=new Date(a.getFullYear(),a.getMonth()+1,a.getDate());mo++}
+ var rd=Math.round((t-a)/864e5);
+ var up=S.dates.map(function(d){return{l:d.l,n:until(d.d,d.y)}}).sort(function(a,b){return a.n-b.n})[0];
+ return '<p class="label">Together since 12 December 2025</p><div class="count">'+n+'</div><p class="lead">days, or '+mo+' months and '+rd+' days, of us.</p>'+
+ '<div class="sec"><p class="label">Reason no. '+(i+1)+' of 365</p><p style="margin:0">'+(r?esc(r):'<span class="m">Not written yet. Add it under Our World.</span>')+'</p></div>'+
+ (up?'<div class="sec"><p class="label">Next date</p><p style="margin:0">'+esc(up.l)+', '+(up.n===0?'today':'in '+up.n+' days')+'</p></div>':'')+
+ '<div class="sec"><p class="label">A love note</p><p style="margin:0;white-space:pre-wrap">'+(rn?esc(rn.b):'<span class="m">Write notes under More, Letters, in the category “Love note”.</span>')+'</p><button class="b" onclick="rn=pickNote();render()">Another note</button></div>';
+}
+function story(){
+ var ev=S.story.map(function(e,i){return{e:e,i:i}}).sort(function(a,b){return (a.e.d||'0')<(b.e.d||'0')?-1:1});
+ var h='<h1>Our Story</h1><p class="lead">The moments, in order.</p>'+ev.map(function(o){var e=o.e,i=o.i;
+  if(edit==='s'+i)return '<div class="item"><input id="st" value="'+esc(e.t)+'"><input id="sd" type="date" value="'+esc(e.d)+'"><textarea id="sn" rows="3">'+esc(e.n)+'</textarea><button class="p" onclick="saveStory('+i+')">Save</button><button class="b" onclick="edit=null;render()">Cancel</button></div>';
+  return '<div class="item"><p class="label">'+(e.d?esc(new Date(e.d+'T00:00').toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'})):'Date to add')+'</p><div>'+esc(e.t)+'</div><div class="m">'+esc(e.n)+'</div><button class="b" onclick="edit=\'s'+i+'\';render()">Edit</button><button class="b" onclick="delIt(\'story\','+i+')">Delete</button></div>'}).join('');
+ h+=edit==='snew'?'<div class="item"><input id="st" placeholder="What happened?"><input id="sd" type="date"><textarea id="sn" rows="3" placeholder="Details"></textarea><button class="p" onclick="saveStory(-1)">Add</button><button class="b" onclick="edit=null;render()">Cancel</button></div>':'<div class="item"><button class="b" onclick="edit=\'snew\';render()">Add a moment</button></div>';
+ return h}
+function saveStory(i){var o={t:val('st')||'Untitled',d:val('sd'),n:val('sn')};if(i<0)S.story.push(o);else S.story[i]=o;edit=null;save();render()}
+function world(){return subnav('world',[['reasons','365 Reasons'],['songs','Soundtrack']])+(sub.world==='reasons'?reasons():songs())}
+function reasons(){var f=S.reasons.filter(Boolean).length;
+ return '<h1>365 Reasons</h1><p class="lead">'+f+' written. Tap any line to write or change it.</p>'+
+ S.reasons.map(function(r,i){return '<div class="row"><span class="num">'+(i+1)+'</span><input value="'+esc(r)+'" placeholder="Write reason '+(i+1)+'" onchange="S.reasons['+i+']=this.value.trim();save()"></div>'}).join('')}
+function songs(){return '<h1>Our Soundtrack</h1><p class="lead">Links open Spotify in your own account. Nothing plays automatically.</p>'+
+ SEED.songs.map(function(s,i){var k='s'+i,u='https://open.spotify.com/search/'+encodeURIComponent(s[0]+' '+s[1]);
+ return '<div class="item"><div>'+esc(s[0])+'</div><div class="m">'+esc(s[1]||'&nbsp;')+'</div><a href="'+u+'" target="_blank" rel="noopener" class="m">Open in Spotify</a> &nbsp; <button class="b" onclick="S.favs[\''+k+'\']=!S.favs[\''+k+'\'];save();render()">'+(S.favs[k]?'Favourite ★':'Favourite ☆')+'</button><textarea rows="2" placeholder="A note about this song" onchange="S.notes[\''+k+'\']=this.value;save()">'+esc(S.notes[k]||'')+'</textarea></div>'}).join('')}
+function more(){return subnav('more',[['letters','Letters'],['bucket','Bucket List'],['dates','Special Dates']])+(sub.more==='letters'?letters():sub.more==='bucket'?bucket():dates())}
+var CATS=['Love letter','Birthday wish','Anniversary message','Open-when letter','Personal note','Future letter','Promise','Love note'];
+function letters(){
+ var e=typeof edit==='number'?S.letters[edit]:null;
+ var list=S.letters.map(function(l,i){return{l:l,i:i}}).filter(function(o){var s=q.toLowerCase();return !s||(o.l.t+' '+o.l.b+' '+o.l.c).toLowerCase().indexOf(s)>-1});
+ return '<h1>Letters</h1><p class="lead">Letters, wishes, promises and notes.</p>'+
+ '<select id="lc">'+CATS.map(function(c){return '<option'+(e&&e.c===c?' selected':'')+'>'+c+'</option>'}).join('')+'</select><input id="lt" placeholder="Title" value="'+esc(e?e.t:'')+'"><textarea id="lb" rows="5" placeholder="Write here">'+esc(e?e.b:'')+'</textarea><button class="p" onclick="saveLetter()">'+(e?'Save changes':'Save')+'</button>'+(e?'<button class="b" onclick="edit=null;render()">Cancel</button>':'')+
+ '<div class="sec" style="margin-top:30px"><input id="sq" placeholder="Search" value="'+esc(q)+'" oninput="q=this.value;render()">'+
+ (list.length?list.map(function(o){return '<div class="item"><p class="label">'+esc(o.l.c)+'</p><div>'+esc(o.l.t)+'</div><div class="m" style="white-space:pre-wrap">'+esc(o.l.b)+'</div><button class="b" onclick="edit='+o.i+';render();window.scrollTo(0,0)">Edit</button><button class="b" onclick="delIt(\'letters\','+o.i+')">Delete</button></div>'}).join(''):'<p class="m">Nothing here yet.</p>')+'</div>'}
+function saveLetter(){var o={c:val('lc'),t:val('lt')||'Untitled',b:val('lb')};if(!o.b)return;if(typeof edit==='number')S.letters[edit]=o;else S.letters.push(o);edit=null;save();render()}
+function bucket(){var p=S.bucket.filter(function(b){return !b.x}).length;
+ return '<h1>Bucket List</h1><p class="lead">'+p+' pending, '+(S.bucket.length-p)+' completed.</p>'+
+ '<div class="row"><input id="bn" placeholder="A goal we share"><button class="b" onclick="addB()">Add</button></div>'+
+ S.bucket.map(function(b,i){return '<div class="row item"><input type="checkbox" '+(b.x?'checked':'')+' onchange="S.bucket['+i+'].x=this.checked;save();render()"><input value="'+esc(b.t)+'" class="'+(b.x?'done':'')+'" onchange="S.bucket['+i+'].t=this.value;save()"><button class="b" onclick="delIt(\'bucket\','+i+')">Remove</button></div>'}).join('')}
+function addB(){var t=val('bn');if(t){S.bucket.push({t:t,x:false});save();render()}}
+function dates(){
+ var l=S.dates.map(function(d,i){return{d:d,i:i,n:until(d.d,d.y)}}).sort(function(a,b){return (a.n<0)-(b.n<0)||a.n-b.n});
+ return '<h1>Special Dates</h1><p class="lead">Birthdays, anniversaries and days worth keeping.</p><input id="dl" placeholder="Name of the date"><input id="dd" type="date"><label class="row m"><input type="checkbox" id="dy" checked> Repeats every year</label><button class="p" onclick="addD()">Add date</button><div class="sec" style="margin-top:30px">'+
+ l.map(function(o){return '<div class="row item"><div style="flex:1"><div>'+esc(o.d.l)+'</div><div class="m">'+esc(o.d.d)+(o.d.y?', yearly':'')+'</div></div><div class="m">'+(o.n<0?'passed':o.n===0?'today':o.n+' days')+'</div><button class="b" onclick="delIt(\'dates\','+o.i+')">Remove</button></div>'}).join('')+'</div>'}
+function addD(){var l=val('dl'),d=val('dd');if(l&&d){S.dates.push({l:l,d:d,y:document.getElementById('dy').checked});save();render()}}
+function render(){
+ var f=document.activeElement&&document.activeElement.id==='sq';
+ document.getElementById('app').innerHTML=tab==='home'?home():tab==='story'?story():tab==='world'?world():more();
+ document.getElementById('nav').innerHTML=TABS.map(function(t){return '<button class="'+(tab===t[0]?'on':'')+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>'}).join('');
+ if(f){var s=document.getElementById('sq');if(s){s.focus();s.setSelectionRange(q.length,q.length)}}
+}
+render();
+</script></body></html>
